@@ -1,3 +1,9 @@
+katversion (0.7-1kern1) xenial; urgency=medium
+
+  * update signature
+
+ -- KERN packaging <packaging@kernsuite.info>  Tue, 07 Nov 2017 16:03:05 +0200
+
 katversion (0.7-1) xenial; urgency=low
 
   * Initial release
