@@ -1,3 +1,9 @@
+katversion (0.9-1kern1) bionic; urgency=medium
+
+  * New upstream version 0.9
+
+ -- KERN packaging <packaging@kernsuite.info>  Thu, 17 May 2018 13:26:27 +0000
+
 katversion (0.7-1kern1) xenial; urgency=medium
 
   * update signature
