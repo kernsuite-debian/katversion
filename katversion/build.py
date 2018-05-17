@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2014-2016, National Research Foundation (Square Kilometre Array)
+# Copyright (c) 2014-2018, National Research Foundation (Square Kilometre Array)
 #
 # Licensed under the BSD 3-Clause License (the "License"); you may not use
 # this file except in compliance with the License. You may obtain a copy
@@ -52,7 +52,7 @@ def patch_init_py(base_dir, name, version):
         # Append new version attribute to ensure it is authoritative, but only
         # if it is not already there (this happens in pip sdist installs)
         version_cmd = "__version__ = '{0}'\n".format(version)
-        if lines[-1] != version_cmd:
+        if not lines or lines[-1] != version_cmd:
             init_file.write("\n# Automatically added by katversion\n")
             init_file.write(version_cmd)
         init_file.truncate()

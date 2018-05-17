@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ################################################################################
-# Copyright (c) 2014-2016, National Research Foundation (Square Kilometre Array)
+# Copyright (c) 2014-2018, National Research Foundation (Square Kilometre Array)
 #
 # Licensed under the BSD 3-Clause License (the "License"); you may not use
 # this file except in compliance with the License. You may obtain a copy
@@ -16,14 +16,10 @@
 # limitations under the License.
 ################################################################################
 
-from setuptools import dist, setup, find_packages
+from setuptools import setup, find_packages
 
-# Ensure we have pkginfo before we start as it is needed before we call setup()
-# If not installed system-wide it will be downloaded into the local .eggs dir
-dist.Distribution(dict(setup_requires='pkginfo'))
-
-# These are safe to import inside setup.py as the only external dependencies
-# are setuptools and pkginfo and they are both now available
+# These are safe to import inside setup.py as the only external dependency
+# is setuptools and that is already available
 from katversion import get_version
 from katversion.build import AddVersionToInitBuildPy, AddVersionToInitSdist
 
@@ -54,6 +50,7 @@ setup(name="katversion",
           "Programming Language :: Python :: 3.3",
           "Programming Language :: Python :: 3.4",
           "Programming Language :: Python :: 3.5",
+          "Programming Language :: Python :: 3.6",
           "Topic :: Software Development :: Version Control",
           "Topic :: System :: Software Distribution",
           "Topic :: Software Development :: Libraries :: Python Modules"],
@@ -66,11 +63,6 @@ setup(name="katversion",
       version=get_version(),
       cmdclass={'build_py': AddVersionToInitBuildPy,
                 'sdist': AddVersionToInitSdist},
-      # We need pkginfo to get our own version (it will already be there
-      # so this is more for documentation purposes)
-      setup_requires=['pkginfo'],
-      # We also need pkginfo to get the versions of other packages
-      install_requires=['pkginfo'],
       tests_require=["unittest2>=0.5.1",
                      "nose>=1.3, <2.0"],
       zip_safe=False,
