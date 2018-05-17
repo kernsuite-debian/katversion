@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2014-2016, National Research Foundation (Square Kilometre Array)
+# Copyright (c) 2014-2018, National Research Foundation (Square Kilometre Array)
 #
 # Licensed under the BSD 3-Clause License (the "License"); you may not use
 # this file except in compliance with the License. You may obtain a copy
@@ -20,17 +20,17 @@ import os
 import time
 import re
 from subprocess import Popen, PIPE
+from email.parser import Parser
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 import pkg_resources  # part of setuptools
-try:
-    # This requires setuptools >= 12
-    from pkg_resources import parse_version, SetuptoolsVersion
-except ImportError:
-    parse_version = SetuptoolsVersion = None
-from pkginfo import UnpackedSDist
 
 
 VERSION_FILE = '___version___'
+NON_ALPHANUMERIC = re.compile('[^a-z0-9]')
 
 
 def run_cmd(path, *cmd):
@@ -104,7 +104,7 @@ def get_git_version(path):
     num_commits_since_branch = len(commits)
     # Short hash of the latest commit
     short_commit_name = commits[0].partition(' ')[0]
-    # A valid version is a sequence of dotted numbers optionally prefixed by 'v'
+    # A valid version is sequence of dotted numbers optionally prefixed by 'v'
     valid_version = re.compile(r'^v?([\.\d]+)$')
 
     def tagged_version(commit):
@@ -124,7 +124,7 @@ def get_git_version(path):
             break
     else:
         version_numbers = [0, 0]
-    # It is a release if the current commit has a version tag (and dir is clean)
+    # It is a release if current commit has a version tag (and dir is clean)
     release = (commit == commits[0]) and not dirty
     if not release:
         # We are working towards the next (minor) release according to PEP 440
@@ -179,13 +179,30 @@ def get_version_from_module(module):
             pass
 
 
+def _must_decode(value):
+    """Copied from pkginfo 1.4.1, _compat module."""
+    if type(value) is bytes:
+        try:
+            return value.decode('utf-8')
+        except UnicodeDecodeError:
+            return value.decode('latin1')
+    return value
+
+
 def get_version_from_unpacked_sdist(path):
-    """Assume path points to an unpacked source distribution and get version."""
+    """Assume path points to unpacked source distribution and get version."""
+    # This is a condensed version of the relevant code in pkginfo 1.4.1
     try:
-        return UnpackedSDist(path).version
-    except ValueError:
-        # Could not load path as an unpacked sdist
-        pass
+        with open(os.path.join(path, 'PKG-INFO')) as f:
+            data = f.read()
+    except IOError:
+        # Could not load path as an unpacked sdist as it had no PKG-INFO file
+        return
+    fp = StringIO(_must_decode(data))
+    msg = Parser().parse(fp)
+    value = msg.get('Version')
+    if value != 'UNKNOWN':
+        return value
 
 
 def get_version_from_file(path):
@@ -212,21 +229,19 @@ def get_version_from_file(path):
 
 def normalised(version):
     """Normalise a version string according to PEP 440, if possible."""
-    if parse_version:
-        # Let setuptools (>= 12) do the normalisation
-        return str(parse_version(version))
+    norm_version = pkg_resources.parse_version(version)
+    if not isinstance(norm_version, tuple):
+        # Let setuptools (>= 8) do the normalisation
+        return str(norm_version)
     else:
-        # Homegrown normalisation for older setuptools (< 12)
+        # Homegrown normalisation for older setuptools (< 8)
         public, sep, local = version.lower().partition('+')
         # Remove leading 'v' from public version
         if len(public) >= 2:
             if public[0] == 'v' and public[1] in '0123456789':
                 public = public[1:]
-        # Turn all characters except alphanumerics into periods in local version
-        alphanum_or_period = ['.'] * 256
-        for c in 'abcdefghijklmnopqrstuvwxyz0123456789':
-            alphanum_or_period[ord(c)] = c
-        local = local.translate(''.join(alphanum_or_period))
+        # Turn all chars except alphanumerics into periods in local version
+        local = NON_ALPHANUMERIC.sub('.', local)
         return public + sep + local
 
 
