@@ -1,3 +1,10 @@
+katversion (1.0-1kern1) bionic; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 1.0
+
+ -- KERN packaging <packaging@kernsuite.info>  Tue, 02 Jun 2020 23:48:12 +0200
+
 katversion (0.9-1kern1) bionic; urgency=medium
 
   * New upstream version 0.9

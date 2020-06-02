@@ -2,17 +2,33 @@ Source: katversion
 Section: python
 Priority: optional
 Maintainer: Gijs Molenaar <gijs@pythonic.nl>
-Build-Depends: debhelper (>= 9), dh-python, python-all, python-setuptools,
- python-pkginfo
-Standards-Version: 3.9.4
+Build-Depends: debhelper (>= 9),
+ dh-python,
+ python-all,
+ python3-all,
+ python-setuptools,
+ python3-setuptools,
+ python-pkginfo,
+ python3-pkginfo
+Standards-Version: 4.4.1
 Homepage: https://github.com/ska-sa/katversion
 Vcs-Git: git://github.com/kernsuite-debian/katversion.git
 Vcs-Browser: https://github.com/kernsuite-debian/katversion
 X-Python-Version: >= 2.7
+X-Python3-Version: >= 3.6
 
 Package: python-katversion
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}
+Description: Provides proper versioning for Python packages
+ The katversion package provides proper versioning for Python packages as
+ dictated by their (git) source repositories. The resulting version string
+ is baked into the installed package's __init__.py file for guaranteed
+ traceability when imported (no dependency on what pkg_resources thinks!).
+
+Package: python3-katversion
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}
 Description: Provides proper versioning for Python packages
  The katversion package provides proper versioning for Python packages as
  dictated by their (git) source repositories. The resulting version string
