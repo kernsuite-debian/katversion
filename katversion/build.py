@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2014-2018, National Research Foundation (Square Kilometre Array)
+# Copyright (c) 2014-2020, National Research Foundation (Square Kilometre Array)
 #
 # Licensed under the BSD 3-Clause License (the "License"); you may not use
 # this file except in compliance with the License. You may obtain a copy
@@ -26,18 +26,13 @@ if "setuptools" in sys.modules:
 else:
     from distutils.command.sdist import log, sdist as OriginalSdist
 
-from .version import get_version
+from .version import get_version  # noqa: E402 (confused by if-statement above)
 
 
-def patch_init_py(base_dir, name, version):
+def patch_init_py(init_py, version):
     """Patch __init__.py to remove version check and append hard-coded version."""
-    # Ensure main package dir is there (may be absent in script-only packages)
-    package_dir = os.path.join(base_dir, name)
-    if not os.path.isdir(package_dir):
-        os.makedirs(package_dir)
     # Open top-level __init__.py and read whole file
-    init_py = os.path.join(package_dir, '__init__.py')
-    log.info("patching %s to bake in version '%s'" % (init_py, version))
+    log.info("patching %s to bake in version '%s'", init_py, version)
     with open(init_py, 'r+') as init_file:
         lines = init_file.readlines()
         # Search for sentinels indicating version checking block
@@ -69,11 +64,12 @@ class AddVersionToInitBuildPy(NewStyleDistUtilsBuildPy):
     def run(self):
         # First do normal build (via super, so this can call custom builds too)
         super(NewStyleDistUtilsBuildPy, self).run()
-        # Obtain package name and version (set up via setuptools metadata)
-        name = self.distribution.get_name()
+        # Obtain distribution package version (set up via setuptools metadata)
         version = self.distribution.get_version()
-        # Patch (or create) top-level __init__.py
-        patch_init_py(self.build_lib, name, version)
+        # Patch top-level __init__.py in all import packages
+        for package, _, build_dir, _ in self.data_files:
+            init_py = os.path.join(build_dir, '__init__.py')
+            patch_init_py(init_py, version)
 
 
 class NewStyleSdist(OriginalSdist, object):
@@ -87,16 +83,20 @@ class AddVersionToInitSdist(NewStyleSdist):
     def make_release_tree(self, base_dir, files):
         # First do normal sdist (via super, so this can call custom sdists too)
         super(NewStyleSdist, self).make_release_tree(base_dir, files)
-        # Obtain package name and version (set up via setuptools metadata)
-        name = self.distribution.get_name()
+        # Obtain distribution package version (set up via setuptools metadata)
         version = self.distribution.get_version()
-        # Ensure __init__.py is not hard-linked so that we don't change source
-        dest = os.path.join(base_dir, name, '__init__.py')
-        if hasattr(os, 'link') and os.path.exists(dest):
-            os.unlink(dest)
-            self.copy_file(os.path.join(name, '__init__.py'), dest)
-        # Patch (or create) top-level __init__.py
-        patch_init_py(base_dir, name, version)
+        # We need build_py command for this as sdist is unaware of import packages
+        build_py = self.get_finalized_command('build_py')
+        # Patch __init__.py in source directories of all import packages
+        for package, input_src_dir, _, _ in build_py.data_files:
+            output_src_dir = os.path.join(base_dir, input_src_dir)
+            # Ensure __init__.py is not hard-linked so that we don't change source
+            dest = os.path.join(output_src_dir, '__init__.py')
+            if hasattr(os, 'link') and os.path.exists(dest):
+                os.unlink(dest)
+                self.copy_file(os.path.join(input_src_dir, '__init__.py'), dest)
+            # Patch top-level __init__.py
+            patch_init_py(dest, version)
 
 
 def setuptools_entry(dist, keyword, value):
@@ -110,13 +110,17 @@ def setuptools_entry(dist, keyword, value):
         s = "Ignoring explicit version='{0}' in setup.py, using '{1}' instead"
         warnings.warn(s.format(dist.metadata.version, version))
     dist.metadata.version = version
+
     # Extend build_py command to bake version string into installed package
     ExistingCustomBuildPy = dist.cmdclass.get('build_py', object)
+
     class KatVersionBuildPy(AddVersionToInitBuildPy, ExistingCustomBuildPy):
         """First perform existing build_py and then bake in version string."""
     dist.cmdclass['build_py'] = KatVersionBuildPy
+
     # Extend sdist command to bake version string into source package
     ExistingCustomSdist = dist.cmdclass.get('sdist', object)
+
     class KatVersionSdist(AddVersionToInitSdist, ExistingCustomSdist):
         """First perform existing sdist and then bake in version string."""
     dist.cmdclass['sdist'] = KatVersionSdist
