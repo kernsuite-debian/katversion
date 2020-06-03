@@ -1,3 +1,10 @@
+katversion (1.0-1kern2) bionic; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * Add Conflict section
+
+ -- KERN packaging <packaging@kernsuite.info>  Wed, 03 Jun 2020 10:25:46 +0200
+
 katversion (1.0-1kern1) bionic; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
