@@ -20,7 +20,6 @@ X-Python3-Version: >= 3.6
 Package: python-katversion
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}
-Conflicts: python3-katversion
 Description: Provides proper versioning for Python packages
  The katversion package provides proper versioning for Python packages as
  dictated by their (git) source repositories. The resulting version string
@@ -30,9 +29,13 @@ Description: Provides proper versioning for Python packages
 Package: python3-katversion
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}
-Conflicts: python-katversion
-Description: Provides proper versioning for Python packages
+Description: Provides proper versioning for Python3 packages
  The katversion package provides proper versioning for Python packages as
  dictated by their (git) source repositories. The resulting version string
  is baked into the installed package's __init__.py file for guaranteed
  traceability when imported (no dependency on what pkg_resources thinks!).
+
+Package: katversion
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, python3-katversion
+Description: Provides proper versioning for Python3 packages
