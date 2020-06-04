@@ -1,3 +1,10 @@
+katversion (1.0-1kern4) bionic; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * Add Replace section
+
+ -- KERN packaging <packaging@kernsuite.info>  Thu, 04 Jun 2020 11:53:24 +0200
+
 katversion (1.0-1kern3) bionic; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
