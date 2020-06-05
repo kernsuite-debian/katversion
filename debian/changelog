@@ -1,3 +1,10 @@
+katversion (1.0-1kern5) bionic; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * Remove python3 binary
+
+ -- KERN packaging <packaging@kernsuite.info>  Fri, 05 Jun 2020 12:59:56 +0200
+
 katversion (1.0-1kern4) bionic; urgency=medium
 
   [ Athanaseus Javas Ramaila ]

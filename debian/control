@@ -20,7 +20,6 @@ X-Python3-Version: >= 3.6
 Package: python-katversion
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}
-Replaces: python-katversion
 Description: Provides proper versioning for Python packages
  The katversion package provides proper versioning for Python packages as
  dictated by their (git) source repositories. The resulting version string
@@ -30,7 +29,6 @@ Description: Provides proper versioning for Python packages
 Package: python3-katversion
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}
-Replaces: python-katversion
 Description: Provides proper versioning for Python3 packages
  The katversion package provides proper versioning for Python packages as
  dictated by their (git) source repositories. The resulting version string
