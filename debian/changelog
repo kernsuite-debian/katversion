@@ -1,3 +1,12 @@
+katversion (1.1-1kern1) focal; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 1.1
+  * Remove py2 support
+  * Build for focal
+
+ --  <athanaseus@upload.kernsuite.info>  Fri, 29 Jan 2021 13:27:31 +0000
+
 katversion (1.0-1kern5) bionic; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
