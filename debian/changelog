@@ -1,3 +1,10 @@
+katversion (1.1-1kern2) jammy; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * Build for jammy
+
+ -- KERN packaging <packaging@kernsuite.info>  Thu, 04 Apr 2024 12:02:32 +0000
+
 katversion (1.1-1kern1) focal; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
@@ -5,7 +12,7 @@ katversion (1.1-1kern1) focal; urgency=medium
   * Remove py2 support
   * Build for focal
 
- --  <athanaseus@upload.kernsuite.info>  Fri, 29 Jan 2021 13:27:31 +0000
+ -- KERN packaging <packaging@kernsuite.info>  Fri, 29 Jan 2021 13:27:31 +0000
 
 katversion (1.0-1kern5) bionic; urgency=medium
 
