@@ -1,2 +1,2 @@
-version=3
-https://github.com/ska-sa/katversion/releases/tag /ska-sa/katversion/archive/v(\d[\.\d]+).tar.gz
+version=4
+https://github.com/ska-sa/katversion/tags .*/v?(\d.*)@ARCHIVE_EXT@
