@@ -3,17 +3,10 @@
 
 export DH_VERBOSE=1
 export PYBUILD_NAME=katversion
+export KATVERSION_FORCE_VERSION=1.3
+export PYBUILD_TEST_ARGS={dir}/katversion/test
+# Set the test runner to pytest
+export PYBUILD_TEST_RUNNER=pytest
 
 %:
 	dh $@ --with python3 --buildsystem=pybuild
-
-override_dh_auto_clean:
-	dh_clean
-	rm -rf .eggs
-	find katversion -name "*.pyc" -delete
-	rm -rf .pybuild
-	rm -rf build
-	rm -rf *.egg-info
-
-override_dh_auto_test:
-	true

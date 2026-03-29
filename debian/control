@@ -6,16 +6,18 @@ Build-Depends: debhelper-compat (= 13),
  dh-python,
  python3-all,
  python3-setuptools,
- python3-pkginfo
-Standards-Version: 4.6.2.0
+ python3-pkginfo,
+ python3-packaging,
+ python3-pytest
+Standards-Version: 4.7.2.0
 Homepage: https://github.com/ska-sa/katversion
 Vcs-Git: git://github.com/kernsuite-debian/katversion.git
 Vcs-Browser: https://github.com/kernsuite-debian/katversion
-X-Python3-Version: >= 3.10
+X-Python3-Version: >= 3.12
 
 Package: python3-katversion
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}
+Depends: ${misc:Depends}, ${python3:Depends}, python3-packaging
 Description: Provides proper versioning for Python3 packages
  The katversion package provides proper versioning for Python packages as
  dictated by their (git) source repositories. The resulting version string
@@ -24,5 +26,5 @@ Description: Provides proper versioning for Python3 packages
 
 Package: katversion
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, python3-katversion
+Depends: ${misc:Depends}, python3-katversion
 Description: Provides proper versioning for Python3 packages
